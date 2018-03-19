@@ -55,10 +55,10 @@ contract Voting{
     increments the number of votes for said candidate by 1
     changes maxVotes value if it is required */
     function vote(uint _candidate) public canVote() payable{
-        Voter storage v = voters[msg.sender];
-
-        v.hasVoted = true;
-        v.vote = _candidate;
+        voters[msg.sender] = Voter({
+            hasVoted : true,
+            vote : _candidate
+        });
         uint n = candidates[_candidate].numberOfVotes + 1;
         candidates[_candidate].numberOfVotes = n;
         if(n > maxVotes){
@@ -101,12 +101,17 @@ contract Voting{
         return maxVotes;
     }
 
-    /* returns what candidate an address has voted for
+    /* returns what candidate an address has voted for if the address has voted
+    otherwise returns that the address has not voted for anything yet
     keeps voting public but anonymous as no one knows who the address belongs to*/
     function votedFor(address _voter) public view returns(string){
-        uint v = voters[_voter].vote;
-        bytes32 s = candidates[v].name;
-        return str(s);
+        if(voters[_voter].hasVoted == false){
+            return "You have not voted yet";
+        }else{
+            uint v = voters[_voter].vote;
+            bytes32 s = candidates[v].name;
+            return str(s);
+        }
     }
 
     /* converts a bytes32 to a string

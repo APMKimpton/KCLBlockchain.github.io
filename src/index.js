@@ -118,9 +118,8 @@ const abi = [
 	}
 ]
 
-const contractAddress = '0x1cFeDF36c3f79585248de893812f979B83305E9D'
+const contractAddress = '0xb883Dc33A9dAdC7F4aDA4c74FC22F6FbA7d163e1';
 var contract = web3.eth.contract(abi).at(contractAddress);
-
 
 $(document).ready(function() {
     if($("#index_page")){
@@ -155,14 +154,21 @@ $(document).ready(function() {
     }
     if($("#results_page")){
         $("#resultsBtn").click(function(){
-            //Hardcoded in this example
-            var voteCounts = [];
-            for(var i = 0; i < 4; i++){
-                contract.totalVotesFor.call(i, {gas: 200000 }, function (error, result){
-                    voteCounts.push(result.c[0]);
-                    setResultText(voteCounts); //This should be improved and not called multiple times - will fix later
+
+            //Hardcoded in this example to avoid asyncrhnous calls - wrong ordering - need to fix
+            $("#resultsText").text("");
+            contract.totalVotesFor.call(0, {gas: 200000 }, function (error, result){
+                $("#resultsText").append("<p>The total number of votes for Cubana is: " + result.c[0] + "</p>");
+                contract.totalVotesFor.call(1, {gas: 200000 }, function (error, result){
+                    $("#resultsText").append("<p>The total number of votes for Knight's Templar is: " + result.c[0] + "</p>");
+                    contract.totalVotesFor.call(2, {gas: 200000 }, function (error, result){
+                        $("#resultsText").append("<p>The total number of votes for Edgar Wallace is: " + result.c[0] + "</p>");
+                        contract.totalVotesFor.call(3, {gas: 200000 }, function (error, result){
+                            $("#resultsText").append("<p>The total number of votes for Lyceum's Templar is: " + result.c[0] + "</p>");
+                        });
+                    });
                 });
-            }
+            });
         });
     }
 });

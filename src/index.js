@@ -118,7 +118,7 @@ const abi = [
 	}
 ]
 
-const contractAddress = '0xb883Dc33A9dAdC7F4aDA4c74FC22F6FbA7d163e1';
+const contractAddress = '0xdD8b0d01dfE18138d3A8b165711b50b492b8d6B7';
 var contract = web3.eth.contract(abi).at(contractAddress);
 
 $(document).ready(function() {
@@ -155,7 +155,7 @@ $(document).ready(function() {
     if($("#results_page")){
         $("#resultsBtn").click(function(){
 
-            //Hardcoded in this example to avoid asyncrhnous calls - wrong ordering - need to fix
+            //Hardcoded in this example to avoid asynchronous calls - wrong ordering - need to fix
             $("#resultsText").text("");
             contract.totalVotesFor.call(0, {gas: 200000 }, function (error, result){
                 $("#resultsText").append("<p>The total number of votes for Cubana is: " + result.c[0] + "</p>");
